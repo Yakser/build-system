@@ -5,6 +5,7 @@ from functools import lru_cache
 import yaml
 
 from .exceptions import UnknownBuildName, TasksCyclicDependence
+from ..constants import STATIC_DIR
 
 tasks = {}
 builds = {}
@@ -18,23 +19,29 @@ def load_files():
 
 
 def get_tasks_adjacency_list() -> dict[str, list[str]]:
-    raw_tasks = read_yaml("tasks.yaml")["tasks"]
-    adj_list = defaultdict(list)
-    for task in raw_tasks:
-        adj_list[task["name"]].extend(task["dependencies"])
+    adj_list = {}
+    for task in read_tasks():
+        adj_list[task["name"]] = task["dependencies"]
     return adj_list
 
 
 def get_builds_adjacency_list() -> dict[str, list[str]]:
-    raw_builds = read_yaml("builds.yaml")["builds"]
     adj_list = {}
-    for build in raw_builds:
+    for build in read_builds():
         adj_list[build["name"]] = build["tasks"]
     return adj_list
 
 
+def read_tasks():
+    return read_yaml("tasks.yaml")["tasks"]
+
+
+def read_builds():
+    return read_yaml("builds.yaml")["builds"]
+
+
 def read_yaml(filename: str) -> dict:
-    file_path = os.path.join('../static', filename)
+    file_path = os.path.join(STATIC_DIR, filename)
     with open(file_path) as file:
         return yaml.safe_load(file)
 
@@ -72,4 +79,3 @@ def topological_sort(task_name: str) -> list[str]:
     dfs(task_name)
 
     return stack
-

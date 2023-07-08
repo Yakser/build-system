@@ -8,9 +8,8 @@ packages = [{include = "build_system"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.100.0"
-uvicorn = {extras = ["standard"], version = "^0.22.0"}
-pyyaml = "^6.0"
+fastapi = {extras = ["all"], version = "^0.100.0"}
+pytest = "^7.4.0"
 
 
 [build-system]
