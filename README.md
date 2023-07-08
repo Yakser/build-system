@@ -3,38 +3,49 @@
 ![Linters](https://github.com/TimePeak/users/actions/workflows/linters.yml/badge.svg)
 ![Tests](https://github.com/TimePeak/users/actions/workflows/tests.yml/badge.svg)
 
-## Usage
 
-### Create virtual environment
+## Run service via Docker
 
-🔑 Copy `.env.example` to `.env` and change api settings
+```shell
+docker-compose up -d
+```
+
+## Run service via uvicorn
+
+### Create and activate virtual environment
+
+```shell
+python -m virtualenv --python=3.11 venv
+
+./venv/Scripts/activate # source ./venv/bin/activate
+```
+
+
 
 ### Install dependencies
 
-* 🐍 Install poetry with command `pip install poetry`
-* 📎 Install dependencies with command `poetry install`
+* Install poetry with command `pip install poetry`
+* Install dependencies with command `poetry install`
 
 ### Install pre-commit hooks
 
 To install pre-commit simply run inside the shell:
 
-```bash
+```shell
 pre-commit install
 ```
 
 To run it on all of your files, do
 
-```bash
+```shell
 pre-commit run --all-files
 ```
 
 
 
-### 🚀 Run project
-`docker-compose up -d`
-
-or
+### Run service
 
 ```shell
 uvicorn app.main:app --reload
 ```
+
