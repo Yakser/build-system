@@ -10,6 +10,7 @@ packages = [{include = "build_system"}]
 python = "^3.11"
 fastapi = {extras = ["all"], version = "^0.100.0"}
 pytest = "^7.4.0"
+pre-commit = "^3.3.3"
 
 
 [build-system]
