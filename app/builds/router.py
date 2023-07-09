@@ -7,7 +7,9 @@ router = APIRouter(
     prefix="/builds",
     tags=["builds"],
     responses={
-        400: {"description": "Unknown build name", }
+        400: {
+            "description": "Unknown build name",
+        }
     },
 )
 

@@ -4,3 +4,7 @@ class TasksCyclicDependence(Exception):
 
 class UnknownBuildName(Exception):
     pass
+
+
+class UnknownTaskName(Exception):
+    pass

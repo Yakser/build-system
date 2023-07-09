@@ -1,49 +1,18 @@
-import os
 from collections import defaultdict
 from functools import lru_cache
 
-import yaml
-
-from .exceptions import UnknownBuildName, TasksCyclicDependence
-from ..constants import STATIC_DIR
+from .exceptions import TasksCyclicDependence, UnknownBuildName, UnknownTaskName
+from .file_manager import FileManager
 
 tasks = {}
 builds = {}
 
 
-def load_files():
+def load_files(file_manager: FileManager):
     # fixme
     global tasks, builds
-    tasks = get_tasks_adjacency_list()
-    builds = get_builds_adjacency_list()
-
-
-def get_tasks_adjacency_list() -> dict[str, list[str]]:
-    adj_list = {}
-    for task in read_tasks():
-        adj_list[task["name"]] = task["dependencies"]
-    return adj_list
-
-
-def get_builds_adjacency_list() -> dict[str, list[str]]:
-    adj_list = {}
-    for build in read_builds():
-        adj_list[build["name"]] = build["tasks"]
-    return adj_list
-
-
-def read_tasks():
-    return read_yaml("tasks.yaml")["tasks"]
-
-
-def read_builds():
-    return read_yaml("builds.yaml")["builds"]
-
-
-def read_yaml(filename: str) -> dict:
-    file_path = os.path.join(STATIC_DIR, filename)
-    with open(file_path) as file:
-        return yaml.safe_load(file)
+    tasks = file_manager.get_tasks_adjacency_list()
+    builds = file_manager.get_builds_adjacency_list()
 
 
 @lru_cache
@@ -67,6 +36,9 @@ def topological_sort(task_name: str) -> list[str]:
             raise TasksCyclicDependence()
 
         color[now] = 1
+        if now not in tasks:
+            raise UnknownTaskName()
+
         for child in tasks[now]:
             if color[child] == 1:
                 raise TasksCyclicDependence()
