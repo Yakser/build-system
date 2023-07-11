@@ -52,31 +52,31 @@ def test_get_tasks_for_build_empty_build_name(load_test_files):
 
 
 def test_get_tasks_for_build_with_unknown_task(load_test_files):
+    build_name = "test_build"
     builds = {
-        "test_get_tasks_for_build_with_unknown_task": [
+        build_name: [
             "test_task1",
             "test_task999",
         ]
     }
     load_test_files(builds=builds)
-    build_name = "test_get_tasks_for_build_with_unknown_task"
     response = client.post("/builds/tasks", json={"name": build_name})
     assert response.status_code == 422
 
 
 def test_get_tasks_for_build_with_empty_tasks(load_test_files):
-    builds = {"test_get_tasks_for_build_with_empty_tasks": []}
+    build_name = "test_build"
+    builds = {build_name: []}
     load_test_files(builds=builds)
-    build_name = "test_get_tasks_for_build_with_empty_tasks"
     response = client.post("/builds/tasks", json={"name": build_name})
     assert response.status_code == 200
     assert response.json() == []
 
 
 def test_get_tasks_for_build_with_cyclic_dependence(load_test_files):
-    builds = {"test_get_tasks_for_build_with_cyclic_dependence": ["task1"]}
+    build_name = "test_build"
+    builds = {build_name: ["task1"]}
     tasks = {"task1": ["task2"], "task2": ["task1"]}
     load_test_files(builds=builds, tasks=tasks)
-    build_name = "test_get_tasks_for_build_with_cyclic_dependence"
     response = client.post("/builds/tasks", json={"name": build_name})
     assert response.status_code == 422
