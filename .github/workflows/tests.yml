@@ -8,7 +8,7 @@ on:
       - '**'        # matches every branch
 
 jobs:
-  django-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,6 @@ jobs:
       - run: poetry install --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
-      # install setuptools
       - run: poetry run pip install setuptools
       - name: Test with pytest
-        run: pytest
+        run: poetry run pytest
